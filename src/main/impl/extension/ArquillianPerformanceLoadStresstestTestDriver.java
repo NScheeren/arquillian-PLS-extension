@@ -13,6 +13,8 @@ import org.jboss.arquillian.test.spi.event.suite.Before;
 import org.jboss.arquillian.test.spi.event.suite.Test;
 import org.jboss.arquillian.transaction.impl.container.SecurityActions;
 
+import main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
+
 public class ArquillianPerformanceLoadStresstestTestDriver {
 
 	@Inject
@@ -30,6 +32,7 @@ public class ArquillianPerformanceLoadStresstestTestDriver {
 	public void fireTest(@Observes ArquillianPerformanceLoadStresstestEvent event) {
 
 		for (final Object inspection : registry().getInspections()) {
+
 			final List<Annotation> qualifiers = event.getQualifiers();
 
 			if (qualifiers == null || qualifiers.size() == 0
@@ -40,7 +43,15 @@ public class ArquillianPerformanceLoadStresstestTestDriver {
 			List<Method> methods = SecurityActions.getMethodsMatchingAllQualifiers(inspection.getClass(), qualifiers);
 
 			for (final Method testMethod : methods) {
+				ArquillianPerformanceLoadStresstestInitializer initializer = new ArquillianPerformanceLoadStresstestInitializer(
+						testMethod.getDeclaringClass());
+
+				ArquillianPerformanceLoadStresstestSuiteResult suiteResult = initializer.getSuiteResult();
+
 				executeTest(inspection, testMethod, qualifiers);
+
+				suiteResult.getClassResults();
+
 			}
 		}
 	}

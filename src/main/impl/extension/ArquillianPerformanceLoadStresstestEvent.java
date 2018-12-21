@@ -1,10 +1,9 @@
 package main.impl.extension;
 
-public class ArquillianPerformanceLoadStresstestEvent {
+import java.lang.annotation.Annotation;
+import java.util.List;
 
-	public List<Annotation> getQualifiers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public abstract class ArquillianPerformanceLoadStresstestEvent {
 
+	public abstract List<Annotation> getQualifiers();
 }
