@@ -1,15 +1,17 @@
 package main.impl.extension;
 
-import java.lang.Thread.State;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.jboss.arquillian.core.spi.Validate;
 import org.jboss.arquillian.test.spi.TestMethodExecutor;
-import org.jboss.arquillian.test.spi.TestResult;
 
 import main.impl.annotations.Iterationcount;
 import main.impl.annotations.TimeDisplaced;
 import main.impl.annotations.Usercount;
+import main.impl.resultobjects.ArquillianPerformanceLoadStresstestMethodResult;
 
 public class ArquillianPerformanceLoadStresstestMethodExecutor implements TestMethodExecutor {
 
@@ -28,86 +30,52 @@ public class ArquillianPerformanceLoadStresstestMethodExecutor implements TestMe
 	public void invoke(Object... parameters) {
 		final Method method = this.method;
 		checkAnnotationConfiguration(method);
-		final TestResult result = null;
+		// final TestResult result = null;
 
-		Integer iterationParameter = method.getAnnotation(Iterationcount.class).value();
-		Integer userCountParameter = method.getAnnotation(Usercount.class).value();
+		int iterationParameter = method.getAnnotation(Iterationcount.class).value();
+		int userCountParameter = method.getAnnotation(Usercount.class).value();
+		int timeDisplaced = method.getAnnotation(TimeDisplaced.class).value();
+		final long waitTime = timeDisplaced * 1000l;
 
-		// Array of the resultArrays
-		TestResult[][] resultAll = new TestResult[iterationParameter][userCountParameter];
+		ArquillianPerformanceLoadStresstestMethodResult methodResult = new ArquillianPerformanceLoadStresstestMethodResult(
+				method.getName(), userCountParameter, iterationParameter, timeDisplaced);
 
-		// create as much Iterations as given in the IterationCount Annotation
 		for (Integer loopcounter = 0; loopcounter < iterationParameter; loopcounter++) {
+			 ExecutorService executor = Executors.newFixedThreadPool(userCountParameter);
+			List<Future<long>> results = new ArrayList<Future<long>>();
 
-			Thread[] threadArray = new Thread[userCountParameter];
-			ThreadGroup threadgroup = new ThreadGroup("ThreadGroup" + loopcounter);
-			// create as much threads as given in the UserCount Annotation
-			for (int threadcounterForCreatingThreads = 0; threadcounterForCreatingThreads < userCountParameter; threadcounterForCreatingThreads++) {
+			for (int threadcounterForCreatingThreads = 0; threadcounterForCreatingThreads < userCountParameter;
+					threadcounterForCreatingThreads++) {
 
-				Runnable runnableForThreads = new Runnable() {
+				Callable callableForThreads = new Callable() {
 					@Override
-					public void run() {
-
+					public Object call() throws Exception {
+						wait(waitTime);
+						long start = System.currentTimeMillis();
 						try {
-
 							method.invoke(method.getClass());
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							return 0;
 						}
+						long stop = System.currentTimeMillis();
+						long duration = stop - start; //Problem bei Tageswechsel
+						return duration;
 					}
 				};
 
-				String nameForThread = "userThread" + threadcounterForCreatingThreads;
-				threadArray[threadcounterForCreatingThreads] = new Thread(threadgroup, runnableForThreads,
-						nameForThread);
+				results = executor.submit(callableForThreads);
+
 
 			}
 
-			if (method.getAnnotation(TimeDisplaced.class) == null) {
-				// start all threads parallel
-				for (int threadcounterForStartingThreads = 0; threadcounterForStartingThreads < userCountParameter; threadcounterForStartingThreads++) {
-					threadArray[threadcounterForStartingThreads].run();
-					resultAll[loopcounter][threadcounterForStartingThreads].setStart(System.currentTimeMillis());
-				}
-			} else {
-				// start the threads with the given delay
-				for (int threadcounterForStartingThreads = 0; threadcounterForStartingThreads < userCountParameter; threadcounterForStartingThreads++) {
-					threadArray[threadcounterForStartingThreads].run();
-					long waitTime = method.getAnnotation(TimeDisplaced.class).value() * 1000l;
-
-					try {
-						threadArray[threadcounterForStartingThreads].sleep(waitTime);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					resultAll[loopcounter][threadcounterForStartingThreads].setStart(System.currentTimeMillis());
-				}
+			for (int resultcounter = 0; resultcounter < results.size(); resultcounter++) {
+				methodResult.setDuration(iterationParameter, userCountParameter, results.get(resultcounter).get());
 			}
 
-			for (int threadcounterForStartingThreads = 0; threadcounterForStartingThreads < userCountParameter; threadcounterForStartingThreads++) {
-				resultAll[loopcounter][threadcounterForStartingThreads].setEnd(0);
-			}
+			methodResult.saveData("C:\\");
 
-			// take the dates when each thread finished running their methods
 
-			while (threadgroup.activeCount() != 0)
-				for (int threadcounterForStartingThreads = 0; threadcounterForStartingThreads < userCountParameter; threadcounterForStartingThreads++) {
-					if (threadArray[threadcounterForStartingThreads].isAlive() == false
-							&& resultAll[loopcounter][threadcounterForStartingThreads].getEnd() == 0) {
-						// set end-time
-						resultAll[loopcounter][threadcounterForStartingThreads].setEnd(System.currentTimeMillis());
-						State state = threadArray[threadcounterForStartingThreads].getState();
-						// save passed status if thread terminated
-						if (state.equals(Thread.State.TERMINATED)) {
-							resultAll[loopcounter][threadcounterForStartingThreads].setStatus(TestResult.Status.PASSED);
-						} else {
-							resultAll[loopcounter][threadcounterForStartingThreads].setStatus(TestResult.Status.FAILED);
-							// throw error
-						}
-					}
-				}
 		}
 
 	}
