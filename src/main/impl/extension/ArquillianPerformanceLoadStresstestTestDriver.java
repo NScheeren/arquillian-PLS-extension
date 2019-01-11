@@ -1,4 +1,4 @@
-package main.impl.extension;
+package src.main.impl.extension;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -12,8 +12,9 @@ import org.jboss.arquillian.test.spi.event.suite.After;
 import org.jboss.arquillian.test.spi.event.suite.Before;
 import org.jboss.arquillian.test.spi.event.suite.Test;
 import org.jboss.arquillian.transaction.impl.container.SecurityActions;
+import org.jboss.arquillian.warp.impl.server.inspection.InspectionRegistry;
 
-import main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
+import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
 
 public class ArquillianPerformanceLoadStresstestTestDriver {
 
@@ -31,7 +32,7 @@ public class ArquillianPerformanceLoadStresstestTestDriver {
 
 	public void fireTest(@Observes ArquillianPerformanceLoadStresstestEvent event) {
 
-		for (final Object inspection : registry().getInspections()) {
+		for (final Object inspection : registry.getInspections()) {
 
 			final List<Annotation> qualifiers = event.getQualifiers();
 
@@ -66,10 +67,10 @@ public class ArquillianPerformanceLoadStresstestTestDriver {
 		return true;
 	}
 
-	private void executeTest(Object inspection, Method method, List<Annotation> qualifiers) {
+	private void executeTest(Object inspection, Method method) {
 		before.fire(new Before(inspection, method));
 
-		test.fire(new Test(new ArquillianPerformanceLoadStresstestMethodExecutor(inspection, method, qualifiers)));
+		test.fire(new Test(new ArquillianPerformanceLoadStresstestMethodExecutor(inspection, method)));
 
 		after.fire(new After(inspection, method));
 	}

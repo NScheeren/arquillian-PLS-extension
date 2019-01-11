@@ -1,4 +1,4 @@
-package main.impl.resultobjects;
+package src.main.impl.resultobjects;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package main.impl.resultobjects;
+package src.main.impl.resultobjects;
 
 import java.io.FileWriter;
 import java.io.IOException;

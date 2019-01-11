@@ -1,9 +1,9 @@
-package main.impl.resultobjects;
+package src.main.impl.resultobjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.impl.annotations.PerformanceLoadStresstest;
+import src.main.impl.annotations.PerformanceLoadStresstest;
 
 public class ArquillianPerformanceLoadStresstestClassResult {
 

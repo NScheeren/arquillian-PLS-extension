@@ -1,9 +1,9 @@
-package main.impl.extension;
+package src.main.impl.extension;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 
-import main.impl.annotations.PerformanceLoadStresstest;
+import src.main.impl.annotations.PerformanceLoadStresstest;
 
 public class ArquillianPerformanceLoadStresstestCheck {
 

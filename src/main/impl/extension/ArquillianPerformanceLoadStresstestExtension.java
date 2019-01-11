@@ -1,4 +1,4 @@
-package main.impl.extension;
+package src.main.impl.extension;
 
 import org.jboss.arquillian.core.spi.LoadableExtension;
 

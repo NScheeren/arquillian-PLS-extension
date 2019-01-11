@@ -1,17 +1,19 @@
-package main.impl.extension;
+package src.main.impl.extension;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.jboss.arquillian.core.spi.Validate;
 import org.jboss.arquillian.test.spi.TestMethodExecutor;
 
-import main.impl.annotations.Iterationcount;
-import main.impl.annotations.TimeDisplaced;
-import main.impl.annotations.Usercount;
-import main.impl.resultobjects.ArquillianPerformanceLoadStresstestMethodResult;
+import src.main.impl.annotations.Iterationcount;
+import src.main.impl.annotations.TimeDisplaced;
+import src.main.impl.annotations.Usercount;
+import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestMethodResult;
 
 public class ArquillianPerformanceLoadStresstestMethodExecutor implements TestMethodExecutor {
 

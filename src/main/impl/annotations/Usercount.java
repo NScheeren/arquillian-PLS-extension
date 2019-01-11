@@ -1,4 +1,4 @@
-package main.impl.annotations;
+package src.main.impl.annotations;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

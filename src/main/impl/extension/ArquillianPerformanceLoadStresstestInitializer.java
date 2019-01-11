@@ -1,11 +1,11 @@
-package main.impl.extension;
+package src.main.impl.extension;
 
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.annotation.SuiteScoped;
 
-import main.impl.resultobjects.ArquillianPerformanceLoadStresstestClassResult;
-import main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
+import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestClassResult;
+import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
 
 public class ArquillianPerformanceLoadStresstestInitializer {
 
