@@ -7,8 +7,10 @@ public class ArquillianPerformanceLoadStresstestExtension implements LoadableExt
 	@Override
 	public void register(ExtensionBuilder builder) {
 
+		// builder.observer evtl nur fuer Klassen, die Events observen?
 		builder.observer(ArquillianPerformanceLoadStresstestMethodExecutor.class);
 		builder.observer(ArquillianPerformanceLoadStresstestCheck.class);
+		builder.observer(ArquillianPerformanceLoadStresstestInitializer.class);
 
 	}
 

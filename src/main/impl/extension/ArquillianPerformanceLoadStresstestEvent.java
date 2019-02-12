@@ -6,4 +6,6 @@ import java.util.List;
 public abstract class ArquillianPerformanceLoadStresstestEvent {
 
 	public abstract List<Annotation> getQualifiers();
+
+	// hier koennte Ausfuehrung starten
 }

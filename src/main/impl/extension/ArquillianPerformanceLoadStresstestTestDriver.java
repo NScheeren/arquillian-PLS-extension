@@ -49,7 +49,7 @@ public class ArquillianPerformanceLoadStresstestTestDriver {
 
 				ArquillianPerformanceLoadStresstestSuiteResult suiteResult = initializer.getSuiteResult();
 
-				executeTest(inspection, testMethod, qualifiers);
+				executeTest(inspection, testMethod);
 
 				suiteResult.getClassResults();
 

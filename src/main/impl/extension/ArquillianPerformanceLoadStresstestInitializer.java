@@ -1,17 +1,6 @@
 package src.main.impl.extension;
 
-import org.jboss.arquillian.core.api.InstanceProducer;
-import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.test.spi.annotation.SuiteScoped;
-
-import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestClassResult;
-import src.main.impl.resultobjects.ArquillianPerformanceLoadStresstestSuiteResult;
-
 public class ArquillianPerformanceLoadStresstestInitializer {
-
-	@Inject
-	@SuiteScoped
-	public InstanceProducer<ArquillianPerformanceLoadStresstestSuiteResult> suiteResultInstance;
 
 	public ArquillianPerformanceLoadStresstestInitializer(Class<?> testClass) {
 
@@ -19,20 +8,13 @@ public class ArquillianPerformanceLoadStresstestInitializer {
 				&& ArquillianPerformanceLoadStresstestCheck.hasRunAsClientAnnotation(testClass)
 				&& ArquillianPerformanceLoadStresstestCheck.hasDeploymentAnnotation(testClass)) {
 
-			ArquillianPerformanceLoadStresstestClassResult classResult = new ArquillianPerformanceLoadStresstestClassResult(
-					testClass.getName() /* ,plsTest */);
-			ArquillianPerformanceLoadStresstestSuiteResult suiteResult = suiteResultInstance.get();
+			// parameter und methode?
+			ArquillianPerformanceLoadStresstestMethodExecutor executor = new ArquillianPerformanceLoadStresstestMethodExecutor(
+					testClass, method);
+			executor.invoke(parameters);
 
-			if (suiteResult == null) {
-				suiteResult = new ArquillianPerformanceLoadStresstestSuiteResult(classResult.getTestClassName());
-				suiteResultInstance.set(suiteResult);
-			}
 		}
 
-	}
-
-	public ArquillianPerformanceLoadStresstestSuiteResult getSuiteResult() {
-		return (ArquillianPerformanceLoadStresstestSuiteResult) this.suiteResultInstance;
 	}
 
 }
